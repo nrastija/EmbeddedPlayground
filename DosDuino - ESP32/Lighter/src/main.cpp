@@ -39,7 +39,7 @@ std::map<String, std::tuple<int, int, int>> rgbCmnds = {
 void processCommand(String color){
   Serial.println("You entered: " + color);
 
-  /*if(rgbCmnds.find(color) != rgbCmnds.end()){
+  if(rgbCmnds.find(color) != rgbCmnds.end()){
     auto matchingColor = rgbCmnds[color];
 
     int r = std::get<0>(matchingColor);
@@ -51,13 +51,13 @@ void processCommand(String color){
   else
     Serial.println("Color not found...");*/
 
-    srand(time(0));
+   /* srand(time(0));
 
     int r = rand() % 2;
     int g = rand() % 2;
     int b = rand() % 2;
 
-    Serial.println(r + g + b);
+    Serial.println(r + g + b); */
     setColor(r, g, b);
 }
 
