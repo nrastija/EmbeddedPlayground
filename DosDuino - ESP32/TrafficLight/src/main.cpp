@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <Keypad.h>
 
 int greenLight = 13;
 int yellowLight = 12;
@@ -6,9 +7,27 @@ int redLight = 11;
 
 int state = 0; // 0 - Green, 1 - Yellow, 2 - Red, 3 - Yellow (return), 4 - Green (return)
 
+
+const byte ROWS = 4;
+const byte COLS = 4;
+
+char keys[ROWS][COLS] = {
+  {'1','2','3','A'},
+  {'4','5','6','B'},
+  {'7','8','9','C'},
+  {'*','0','#','D'}
+};
+
+byte rowPins[ROWS] = {8, 7, 6, 5};
+byte colPins[COLS] = {4, 3, 2, 1};
+
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+
 // put function declarations here:
 void setupTrafficLight();
 void trafficLightMain();
+void trafficLightOff();
+void trafficLightOn();
 
 void setup() {
   Serial.begin(115200);
@@ -23,8 +42,16 @@ void setup() {
 }
 
 void loop() {
-  //trafficLightMain();
+  char key = keypad.getKey();
+  trafficLightMain();
   
+  if (key == '0'){
+    trafficLightOff();
+  }
+
+  if (key == '9'){
+    trafficLightOn();
+  }
 }
 
 // put function definitions here:
@@ -76,3 +103,4 @@ void trafficLightMain() {
         break;
     }  
     }
+
