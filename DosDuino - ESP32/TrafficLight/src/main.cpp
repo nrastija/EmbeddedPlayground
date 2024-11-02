@@ -1,20 +1,17 @@
 #include <Arduino.h>
-#include <string>
 
 int greenLight = 10;
 int yellowLight = 9;
 int redLight = 8;
 
-int polje[3] = {1, 0, 0}; // 1 - zelena, 2 - zuta, 3 - crvena
-
-string high = "HIGH";
-string low = "LOW";
+int state = 0; // 0 - Green, 1 - Yellow, 2 - Red, 3 - Yellow (return), 4 - Green (return)
 
 // put function declarations here:
-int myFunction(int, int);
+void setupTrafficLight();
+void trafficLightMain();
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   pinMode(greenLight, OUTPUT);
   pinMode(yellowLight, OUTPUT);
@@ -26,10 +23,11 @@ void setup() {
 }
 
 void loop() {
-  trafficLightMain();
+  //trafficLightMain();
 }
 
 // put function definitions here:
+
 void setupTrafficLight() {
   
   for (int i=0; i<3; i++){
@@ -43,30 +41,37 @@ void setupTrafficLight() {
     digitalWrite(redLight, LOW); 
     delay(500);
   }
+}
 
 void trafficLightMain() {
-    if (polje[0] == 1){
-      digitalWrite(greenLight, HIGH);
-      digitalWrite(yellowLight, LOW);
-      digitalWrite(redLight, LOW);
-      polje[0] = 0, polje[1] = 1, polje[2] = 0;
-      Serial.println("Green for 5 seconds!");
-    }
-    else if (polje[1] == 1){
-      digitalWrite(greenLight, LOW);
-      digitalWrite(yellowLight, HIGH);
-      digitalWrite(redLight, LOW);
-      polje[0] = 0, polje[1] = 0, polje[2] = 1;
-      Serial.println("Yellow for 5 seconds!");
-    }
-    else{
-      digitalWrite(greenLight, LOW);
-      digitalWrite(yellowLight, LOW);
-      digitalWrite(redLight, HIGH);
-      polje[0] = 1, polje[1] = 0, polje[2] = 0;
-      Serial.println("Red for 5 seconds!");
+    switch(state){
+      case 0:
+        digitalWrite(greenLight, HIGH);
+        Serial.println("Green for 5 seconds");
+        delay(5000);
+        state = 1;
+        break;
+      case 1: 
+        digitalWrite(greenLight, LOW);
+        digitalWrite(yellowLight, HIGH);
+        Serial.println("Yellow for 3 seconds (Green to Red)");
+        delay(3000);
+        state = 2;
+        break;
+      case 3:
+        digitalWrite(redLight, HIGH);
+        Serial.println("Red for 5 seconds");
+        delay(5000);
+        state = 4;
+        break;
+      case 4:
+        digitalWrite(redLight, LOW);
+        digitalWrite(yellowLight, HIGH);
+        serial.println("Yellow for 2 seconds (Red to Green)");
+        delay(2000);
+        state = 0;
+        break;
+
     }
     delay(5000);
     }
-
-}
