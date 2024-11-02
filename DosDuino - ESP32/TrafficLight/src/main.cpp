@@ -1,8 +1,8 @@
 #include <Arduino.h>
 
-int greenLight = 10;
-int yellowLight = 9;
-int redLight = 8;
+int greenLight = 13;
+int yellowLight = 12;
+int redLight = 11;
 
 int state = 0; // 0 - Green, 1 - Yellow, 2 - Red, 3 - Yellow (return), 4 - Green (return)
 
@@ -24,6 +24,7 @@ void setup() {
 
 void loop() {
   //trafficLightMain();
+  
 }
 
 // put function definitions here:
@@ -46,6 +47,7 @@ void setupTrafficLight() {
 void trafficLightMain() {
     switch(state){
       case 0:
+        digitalWrite(yellowLight, LOW); 
         digitalWrite(greenLight, HIGH);
         Serial.println("Green for 5 seconds");
         delay(5000);
@@ -58,20 +60,19 @@ void trafficLightMain() {
         delay(3000);
         state = 2;
         break;
-      case 3:
+      case 2:
+        digitalWrite(yellowLight, LOW);
         digitalWrite(redLight, HIGH);
         Serial.println("Red for 5 seconds");
         delay(5000);
-        state = 4;
+        state = 3;
         break;
-      case 4:
+      case 3:
         digitalWrite(redLight, LOW);
         digitalWrite(yellowLight, HIGH);
-        serial.println("Yellow for 2 seconds (Red to Green)");
-        delay(2000);
+        Serial.println("Yellow for 3 seconds (Red to Green)");
+        delay(3000);
         state = 0;
         break;
-
-    }
-    delay(5000);
+    }  
     }
