@@ -3,6 +3,9 @@
 **/.piolibdeps
 **/.clang_complete
 **/.gcc-flags.json
+.pio/*
+.pioenvs/*
+.piolibdeps/*
 
 # PlatformIO Project Configurations
 platformio.ini.orig
