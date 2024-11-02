@@ -30,6 +30,24 @@ void loop() {
 
 // put function definitions here:
 int setupTrafficLight() {
-
+  
+  for (int i=0; i<3; i++){
+    if (i == 0){
+      digitalWrite(greenLight, HIGH);
+      digitalWrite(yellowLight, LOW);
+      digitalWrite(redLight, LOW);
+    }
+    else if (i == 1){
+      digitalWrite(greenLight, LOW);
+      digitalWrite(yellowLight, HIGH);
+      digitalWrite(redLight, LOW);
+    }
+    else{
+      digitalWrite(greenLight, LOW);
+      digitalWrite(yellowLight, LOW);
+      digitalWrite(redLight, HIGH);
+    }
+    delay(1000);
+  }
 
 }
