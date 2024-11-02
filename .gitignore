@@ -3,7 +3,6 @@
 **/.piolibdeps
 **/.clang_complete
 **/.gcc-flags.json
-**/.vscode/c_cpp_properties.json
 
 # PlatformIO Project Configurations
 platformio.ini.orig
@@ -14,29 +13,48 @@ platformio.ini.orig
 !.vscode/settings.json
 !.vscode/extensions.json
 
-# Build files and output binaries
+# Build files and output binaries (add these if not already in .gitignore)
 *.elf
 *.bin
 *.hex
 *.map
 
-# Logs
-*.log
+# Makefile and related build artifacts
+Makefile
+*.mk
+CMakeLists.txt
+build/
+obj/
+out/
+tmp/
+*.d
+*.dSYM/
+*.obj
+*.o
+*.a
+*.so
+*.exe
+*.dll
 
-# Temporary files
+# Logs and temporary files
+*.log
 *.tmp
 *.temp
 *.bak
 *.swp
 *.swo
 
-# MacOS
+# OS-specific files
 .DS_Store
-
-# Windows
 Thumbs.db
 Desktop.ini
 
 # Python
 __pycache__/
 *.py[cod]
+
+# PlatformIO additional cache and temp folders
+.pio/
+.pioenvs/
+.pio/libdeps/
+.pio/build/
