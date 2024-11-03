@@ -1,0 +1,34 @@
+name: Update README with Issues
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Skripta se pokreće svaki dan u ponoć 
+  workflow_dispatch:
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Fetch Issues and Update README
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "## Issues" > README.md
+          echo "### Open Issues" >> README.md
+          curl -s -H "Authorization: token $GITHUB_TOKEN" "https://github.com/nrastija/EmbeddedPlayground/issues?state=open" | \
+          jq -r '.[] | "- [Issue #" + (.number|tostring) + " - " + .title + "](" + .html_url + ")"' >> README.md
+          
+          echo "### Closed Issues" >> README.md
+          curl -s -H "Authorization: token $GITHUB_TOKEN" "https://github.com/nrastija/EmbeddedPlayground/issues?state=closed" | \
+          jq -r '.[] | "- [Issue #" + (.number|tostring) + " - " + .title + "](" + .html_url + ")"' >> README.md
+
+      - name: Commit and Push
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "Update README with latest issues"
+          git push
