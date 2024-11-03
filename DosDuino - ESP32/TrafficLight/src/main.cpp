@@ -38,20 +38,20 @@ void setup() {
 
   setupTrafficLight();
 
-  Serial.println("Traffic light is ready!");
+  Serial.println("Semafor pokrenut!");
 }
 
 void loop() {
   char key = keypad.getKey();
-  trafficLightMain();
-  
-  if (key == '0'){
-    trafficLightOff();
-  }
 
-  if (key == '9'){
-    trafficLightOn();
+  Serial.println("Pritisnite 0 u iduću sekundu za gašenje semafora!");
+  delay(1000);
+  if (key == '0') {
+    trafficLightOff(); 
+  } else {
+    trafficLightMain(); 
   }
+  
 }
 
 // put function definitions here:
@@ -72,35 +72,74 @@ void setupTrafficLight() {
 }
 
 void trafficLightMain() {
+  char key = keypad.getKey();
+  
+    if (key == '0'){
+        trafficLightOff();
+      }
     switch(state){
       case 0:
         digitalWrite(yellowLight, LOW); 
         digitalWrite(greenLight, HIGH);
-        Serial.println("Green for 5 seconds");
+        Serial.println("Zeleno svjetlo 5 sekundi");
         delay(5000);
         state = 1;
         break;
       case 1: 
         digitalWrite(greenLight, LOW);
         digitalWrite(yellowLight, HIGH);
-        Serial.println("Yellow for 3 seconds (Green to Red)");
+        Serial.println("Žuto svjetlo 3 sekunde (Zeleno na Crveno)");
         delay(3000);
         state = 2;
         break;
       case 2:
         digitalWrite(yellowLight, LOW);
         digitalWrite(redLight, HIGH);
-        Serial.println("Red for 5 seconds");
+        Serial.println("Crveno svjetlo 5 sekundi");
         delay(5000);
         state = 3;
         break;
       case 3:
         digitalWrite(redLight, LOW);
         digitalWrite(yellowLight, HIGH);
-        Serial.println("Yellow for 3 seconds (Red to Green)");
+        Serial.println("Žuto svjetlo 3 sekunde (Crveno na Zeleno)");
         delay(3000);
         state = 0;
         break;
-    }  
+      }  
     }
 
+void trafficLightOff(){
+  char key;
+  Serial.println("Semafor ugašen dok se ne stisne 9!");
+  do{
+    key = keypad.getKey();
+    digitalWrite(greenLight, LOW);
+    digitalWrite(yellowLight, HIGH);
+    digitalWrite(redLight, LOW); 
+    delay(500);
+    digitalWrite(greenLight, LOW);
+    digitalWrite(yellowLight, LOW);
+    digitalWrite(redLight, LOW); 
+    delay(500);
+  } while(key != '9');
+
+  trafficLightOn();
+}
+
+void trafficLightOn(){
+  Serial.println("Semafor ponovno radi!");
+
+  for (int i=0; i<3; i++){
+    digitalWrite(greenLight, HIGH);
+    digitalWrite(yellowLight, LOW);
+    digitalWrite(redLight, HIGH);
+    delay(500);
+
+    digitalWrite(greenLight, LOW);
+    digitalWrite(yellowLight, HIGH);
+    digitalWrite(redLight, LOW); 
+    delay(500);
+  }
+  delay(2000);
+}
