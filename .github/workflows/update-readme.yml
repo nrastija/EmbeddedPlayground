@@ -2,7 +2,7 @@ name: Update README with Issues
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Skripta se pokreće svaki dan u ponoć 
+    - cron: '0 22 * * *' # Skripta se pokreće svaki dan u 22:00 
   workflow_dispatch:
 
 jobs:
@@ -18,17 +18,21 @@ jobs:
         run: |
           echo "## Issues" > README.md
           echo "### Open Issues" >> README.md
-          curl -s -H "Authorization: token $GITHUB_TOKEN" "https://github.com/nrastija/EmbeddedPlayground/issues?state=open" | \
+          curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/nrastija/EmbeddedPlayground/issues?state=open" | \
           jq -r '.[] | "- [Issue #" + (.number|tostring) + " - " + .title + "](" + .html_url + ")"' >> README.md
           
           echo "### Closed Issues" >> README.md
-          curl -s -H "Authorization: token $GITHUB_TOKEN" "https://github.com/nrastija/EmbeddedPlayground/issues?state=closed" | \
+          curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/nrastija/EmbeddedPlayground/issues?state=closed" | \
           jq -r '.[] | "- [Issue #" + (.number|tostring) + " - " + .title + "](" + .html_url + ")"' >> README.md
 
       - name: Commit and Push
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md
-          git commit -m "Update README with latest issues"
-          git push
+          if [ -n "$(git status --porcelain)" ]; then
+            git add README.md
+            git commit -m "Update README with latest issues"
+            git push https://x-access-token:${GITHUB_TOKEN}@github.com/nrastija/EmbeddedPlayground.git HEAD:main
+          else
+            echo "No changes to commit"
+          fi
