@@ -2,7 +2,7 @@ name: Update README with Issues
 
 on:
   schedule:
-    - cron: '0 22 * * *' # Skripta se pokreće svaki dan u 22:00 
+    - cron: '0 22 * * *'  # Poreće se dnevno u 22:00
   workflow_dispatch:
 
 jobs:
@@ -16,11 +16,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "## Issues" > README.md
+          # Save the existing README content to a variable
+          existing_content=$(cat README.md)
+
+          # Write your static introductory content
+          echo "# EmbeddedPlayground" > README.md
+          echo "My own playground consisting of Embedded codes for:" >> README.md
+          echo "- Arduino Uno" >> README.md
+          echo "- DosDuino" >> README.md
+          echo "- ESP 32" >> README.md
+          echo "Coding is done in C++ via Visual Studio Code IDE using extension PlatformIO." >> README.md
+          echo "" >> README.md  # Blank line before issues section
+
+          # Append the Issues section
+          echo "## Issues" >> README.md
           echo "### Open Issues" >> README.md
           curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/nrastija/EmbeddedPlayground/issues?state=open" | \
           jq -r '.[] | "- [Issue #" + (.number|tostring) + " - " + .title + "](" + .html_url + ")"' >> README.md
-          
+
           echo "### Closed Issues" >> README.md
           curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/nrastija/EmbeddedPlayground/issues?state=closed" | \
           jq -r '.[] | "- [Issue #" + (.number|tostring) + " - " + .title + "](" + .html_url + ")"' >> README.md
